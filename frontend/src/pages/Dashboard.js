@@ -20,6 +20,7 @@ const Dashboard = () => {
   const [isDemoThread, setIsDemoThread] = useState(false);
   const [isMobileChatOpen, setIsMobileChatOpen] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const API_BASE_URL = (import.meta.env && import.meta.env.VITE_BACKEND_URL) || 'http://localhost:5000';
 
   const DEFAULT_USERS = [
     { _id: 'demo-1',  name: 'Angelie Crison',    avatar: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150&h=150&fit=crop&crop=face', isOnline: true },
@@ -143,7 +144,7 @@ const Dashboard = () => {
 
   const fetchUsers = async () => {
     try {
-      const response = await axios.get('/api/users');
+      const response = await axios.get(`${API_BASE_URL}/users`);
       const apiUsers = response.data || [];
       // Merge API users with defaults (ensure uniqueness by _id)
       const merged = [...apiUsers, ...DEFAULT_USERS.filter(d => !apiUsers.some(u => String(u._id) === String(d._id)) )];
@@ -156,7 +157,7 @@ const Dashboard = () => {
 
   const fetchConversations = async () => {
     try {
-      const response = await axios.get('/api/users/conversations');
+      const response = await axios.get(`${API_BASE_URL}/users/conversations`);
       setConversations(response.data);
     } catch (error) {
       console.error('Error fetching conversations:', error);
@@ -167,7 +168,7 @@ const Dashboard = () => {
 
   const fetchMessages = async (conversationId) => {
     try {
-      const response = await axios.get(`/api/messages/${conversationId}`);
+      const response = await axios.get(`${API_BASE_URL}/messages/${conversationId}`);
       setMessages(response.data.messages);
     } catch (error) {
       console.error('Error fetching messages:', error);
@@ -211,7 +212,7 @@ const Dashboard = () => {
         // If it's a real user (not demo id), still send to server to create conversation
         if (!String(selectedUser._id).startsWith('demo-')) {
           try {
-            const response = await axios.post('/api/messages', {
+            const response = await axios.post(`${API_BASE_URL}/messages`, {
               recipientId: selectedUser._id,
               content,
               type,
@@ -232,7 +233,7 @@ const Dashboard = () => {
         return;
       }
 
-      const response = await axios.post('/api/messages', {
+      const response = await axios.post(`${API_BASE_URL}/messages`, {
         recipientId: selectedUser._id,
         content,
         type,
