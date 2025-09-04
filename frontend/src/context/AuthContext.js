@@ -63,6 +63,8 @@ const authReducer = (state, action) => {
 
 export const AuthProvider = ({ children }) => {
   const [state, dispatch] = useReducer(authReducer, initialState);
+    // At the top of AuthContext.js
+  const API_BASE_URL = (import.meta.env && import.meta.env.VITE_BACKEND_URL ) || 'http://localhost:5000/api';
 
   // Set up axios interceptor for token
   useEffect(() => {
@@ -105,7 +107,7 @@ export const AuthProvider = ({ children }) => {
   const login = async (email, password) => {
     dispatch({ type: 'AUTH_START' });
     try {
-      const response = await axios.post('/api/auth/login', { email, password });
+      const response = await axios.post(`${API_BASE_URL}/auth/login`, { email, password });
       const { user, token } = response.data;
       
       dispatch({
@@ -133,7 +135,7 @@ export const AuthProvider = ({ children }) => {
         formData.append('profileImage', profileImage);
       }
 
-      const response = await axios.post('/api/auth/register', formData, {
+      const response = await axios.post(`${API_BASE_URL}/auth/register`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -156,7 +158,7 @@ export const AuthProvider = ({ children }) => {
 
   const logout = async () => {
     try {
-      await axios.post('/api/auth/logout');
+      await axios.post(`${API_BASE_URL}/auth/logout`);
     } catch (error) {
       console.error('Logout error:', error);
     } finally {
@@ -166,7 +168,7 @@ export const AuthProvider = ({ children }) => {
 
   const updateProfile = async (profileData) => {
     try {
-      const response = await axios.put('/api/users/profile', profileData);
+      const response = await axios.put(`${API_BASE_URL}/users/profile`, profileData);
       dispatch({
         type: 'UPDATE_USER',
         payload: response.data.user
