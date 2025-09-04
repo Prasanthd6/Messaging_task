@@ -13,6 +13,10 @@
   padding: 20px;
   border-bottom: 1px solid #e0e0e0;
   background-color: #fff;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  backdrop-filter: blur(2px);
 }
 
 .chat-user-info {
@@ -93,7 +97,7 @@
 
 .date-separator {
   text-align: center;
-  margin: 20px 0;
+  margin: 28px 0 16px;
   position: relative;
 }
 

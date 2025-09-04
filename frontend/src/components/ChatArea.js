@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { FiPaperclip, FiSend, FiPhone, FiVideo, FiBell, FiUser, FiSmile } from 'react-icons/fi';
+import { FiPaperclip, FiSend, FiPhone, FiVideo, FiBell, FiUser, FiSmile, FiChevronLeft } from 'react-icons/fi';
 import './ChatArea.css';
 
-const ChatArea = ({ selectedUser, messages, onSendMessage, currentUser, isTyping: externalIsTyping }) => {
+const ChatArea = ({ selectedUser, messages, onSendMessage, currentUser, isTyping: externalIsTyping, onBack }) => {
   const [newMessage, setNewMessage] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const messagesEndRef = useRef(null);
@@ -113,6 +113,15 @@ const ChatArea = ({ selectedUser, messages, onSendMessage, currentUser, isTyping
   return (
     <div className="chat-area">
       <div className="chat-header">
+        {onBack && (
+          <button
+            className="chat-action-btn"
+            onClick={onBack}
+            style={{ marginRight: 8 }}
+          >
+            <FiChevronLeft />
+          </button>
+        )}
         <div className="chat-user-info">
           <div className="chat-avatar">
             {selectedUser.avatar ? (
@@ -159,7 +168,9 @@ const ChatArea = ({ selectedUser, messages, onSendMessage, currentUser, isTyping
                 <span>{date}</span>
               </div>
               {dateMessages.map((message) => {
-                const isSent = message.sender._id === 'current' || (currentUser && message.sender._id === currentUser.id);
+                const isSent = (message.sender && selectedUser && message.sender._id !== selectedUser._id) ||
+                  message.sender._id === 'current' ||
+                  (currentUser && message.sender._id === currentUser.id);
                 return (
                   <div key={message._id} className={`message ${isSent ? 'sent' : 'received'}`}>
                     {!isSent && (

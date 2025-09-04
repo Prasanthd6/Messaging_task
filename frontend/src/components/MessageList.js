@@ -57,9 +57,7 @@ const MessageList = ({ users, conversations, selectedUser, onUserSelect, loading
   return (
     <div className="message-list">
       <div className="message-list-header">
-        <h2>Message</h2>
-        <div className="search-container">
-          <FiSearch className="search-icon" />
+        <div className="search-bar">
           <input
             type="text"
             className="search-input"
@@ -67,11 +65,12 @@ const MessageList = ({ users, conversations, selectedUser, onUserSelect, loading
             value={searchTerm}
             onChange={(e) => onSearchChange(e.target.value)}
           />
+          <FiSearch className="search-icon" />
         </div>
       </div>
       
       <div className="conversations-container">
-        {conversations.length > 0 ? (
+        {conversations.length > 0 && (
         conversations.map((conversation) => {
           const participant = conversation.participant;
           const isSelected = selectedUser && selectedUser._id === participant._id;
@@ -111,7 +110,42 @@ const MessageList = ({ users, conversations, selectedUser, onUserSelect, loading
             </div>
           );
         })
-      ) : (
+      )}
+
+        {users && users.length > 0 && (
+          users.map((u) => {
+            const isSelected = selectedUser && selectedUser._id === u._id;
+            return (
+              <div
+                key={u._id}
+                className={`contact-item ${isSelected ? 'active' : ''}`}
+                onClick={() => onUserSelect(u)}
+              >
+                <div className="contact-avatar">
+                  {u.avatar ? (
+                    <img 
+                      src={u.avatar} 
+                      alt={u.name}
+                      style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover' }}
+                    />
+                  ) : (
+                    getInitials(u.name)
+                  )}
+                  <div className={`status-dot ${u.isOnline ? 'online' : 'offline'}`}></div>
+                </div>
+                <div className="contact-info">
+                  <div className="contact-name">{u.name}</div>
+                  <div className="contact-last-message">Tap to start conversation</div>
+                </div>
+                <div className="contact-meta">
+                  <div className="contact-time">&nbsp;</div>
+                </div>
+              </div>
+            );
+          })
+        )}
+
+        {(!users || users.length === 0) && conversations.length === 0 && (
           <div className="empty-state">
             <div className="empty-state-icon">💬</div>
             <h3>No conversations yet</h3>

@@ -1,17 +1,20 @@
 import React from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { FiGrid, FiBookOpen, FiUsers, FiMessageCircle, FiSettings, FiBarChart2, FiHelpCircle } from 'react-icons/fi';
 
-const Sidebar = ({ user, onLogout }) => {
+const Sidebar = ({ user, onLogout, open = true, onClose }) => {
+  const navigate = useNavigate();
+  const location = useLocation();
   const navItems = [
-    { icon: FiGrid, label: 'Overview', active: false },
-    { icon: FiBookOpen, label: 'Task', active: false },
-    { icon: FiUsers, label: 'Mentors', active: false },
-    { icon: FiMessageCircle, label: 'Message', active: true },
-    { icon: FiSettings, label: 'Settings', active: false }
+    { icon: FiGrid, label: 'Overview', path: '/overview' },
+    { icon: FiBookOpen, label: 'Task', path: '/tasks' },
+    { icon: FiUsers, label: 'Mentors', path: '/mentors' },
+    { icon: FiMessageCircle, label: 'Message', path: '/dashboard' },
+    { icon: FiSettings, label: 'Settings', path: '/settings' }
   ];
 
   return (
-    <div className="sidebar">
+    <div className={`sidebar ${open ? 'open' : 'closed-mobile'}`}>
       <div className="sidebar-header">
         <div className="logo">
                   <div className="logo-icon">
@@ -27,7 +30,8 @@ const Sidebar = ({ user, onLogout }) => {
           return (
             <button
               key={index}
-              className={`nav-item ${item.active ? 'active' : ''}`}
+              className={`nav-item ${location.pathname === item.path ? 'active' : ''}`}
+              onClick={() => navigate(item.path)}
             >
               <IconComponent className="nav-icon" />
               <span>{item.label}</span>
