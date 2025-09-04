@@ -84,7 +84,7 @@ export const AuthProvider = ({ children }) => {
       if (token) {
         try {
           axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-          const response = await axios.get('/api/users/profile');
+          const response = await axios.get(`${API_BASE_URL}/users/profile`);
           dispatch({
             type: 'AUTH_SUCCESS',
             payload: {
