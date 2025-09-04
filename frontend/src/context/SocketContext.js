@@ -8,10 +8,11 @@ export const SocketProvider = ({ children }) => {
   const [socket, setSocket] = useState(null);
   const [isConnected, setIsConnected] = useState(false);
   const { user, token } = useAuth();
-
+  // const SOCKET_URL = import.meta.env.VITE_SOCKET_URL || 'http://localhost:5000';
+const BACKEND_URL = (import.meta.env && import.meta.env.VITE_BACKEND_URL) || 'http://localhost:5000';
   useEffect(() => {
     if (user && token) {
-      const newSocket = io('http://localhost:5000', {
+      const newSocket = io(BACKEND_URL, {
         auth: {
           token: token
         }
